@@ -1,0 +1,59 @@
+{
+  "name": "blockchain-academic-records",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@testing-library/jest-dom": "^5.16.4",
+    "@testing-library/react": "^13.3.0",
+    "@testing-library/user-event": "^13.5.0",
+    "@types/jest": "^27.5.2",
+    "@types/node": "^16.11.47",
+    "@types/react": "^18.0.15",
+    "@types/react-dom": "^18.0.6",
+    "@web3-react/core": "^8.2.0",
+    "@web3-react/metamask": "^8.2.1",
+    "ethers": "^5.7.2",
+    "framer-motion": "^7.2.1",
+    "lucide-react": "^0.513.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-dropzone": "^14.2.2",
+    "react-icons": "^4.4.0",
+    "react-qr-code": "^2.0.11",
+    "react-router-dom": "^6.3.0",
+    "react-scripts": "5.0.1",
+    "recharts": "^2.5.0",
+    "typescript": "^4.7.4",
+    "web-vitals": "^2.1.4",
+    "zustand": "^4.1.1"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.8",
+    "postcss": "^8.4.16",
+    "tailwindcss": "^3.1.8"
+  }
+}

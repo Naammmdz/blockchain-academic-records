@@ -1,0 +1,176 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom focus styles */
+.focus-ring {
+  @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2;
+}
+
+/* Animation utilities */
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.3s ease-out;
+}
+
+.animate-pulse-slow {
+  animation: pulse 3s infinite;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Gradient backgrounds */
+.gradient-bg {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.gradient-bg-blue {
+  background: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%);
+}
+
+.gradient-bg-green {
+  background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+}
+
+.gradient-bg-purple {
+  background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%);
+}
+
+/* Custom card shadows */
+.card-shadow {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+
+.card-shadow-lg {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Loading spinner */
+.spinner {
+  border: 2px solid #f3f4f6;
+  border-top: 2px solid #3B82F6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Modal backdrop */
+.modal-backdrop {
+  backdrop-filter: blur(4px);
+  background-color: rgba(0, 0, 0, 0.25);
+}
+
+/* File upload drag states */
+.file-upload-drag {
+  @apply border-dashed border-2 border-gray-300 bg-gray-50;
+  transition: all 0.2s ease;
+}
+
+.file-upload-drag.drag-over {
+  @apply border-blue-500 bg-blue-50;
+}
+
+/* QR Scanner overlay */
+.qr-scanner-overlay {
+  background: linear-gradient(
+    45deg,
+    transparent 30%,
+    rgba(59, 130, 246, 0.1) 30%,
+    rgba(59, 130, 246, 0.1) 70%,
+    transparent 70%
+  );
+  animation: scanning 2s linear infinite;
+}
+
+@keyframes scanning {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+/* Transaction status indicators */
+.status-pending {
+  @apply bg-yellow-100 text-yellow-800;
+}
+
+.status-completed {
+  @apply bg-green-100 text-green-800;
+}
+
+.status-failed {
+  @apply bg-red-100 text-red-800;
+}
+
+/* Blockchain elements */
+.blockchain-hash {
+  font-family: 'Courier New', monospace;
+  word-break: break-all;
+  @apply text-sm bg-gray-100 px-2 py-1 rounded;
+}
+
+.verification-badge {
+  @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+}
+
+.verification-badge.verified {
+  @apply bg-green-100 text-green-800;
+}
+
+.verification-badge.pending {
+  @apply bg-yellow-100 text-yellow-800;
+}
+
+.verification-badge.failed {
+  @apply bg-red-100 text-red-800;
+}
