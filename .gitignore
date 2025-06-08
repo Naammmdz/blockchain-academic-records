@@ -1,0 +1,458 @@
+# =================================================================
+# BLOCKCHAIN ACADEMIC RECORDS - GITIGNORE
+# =================================================================
+# Project: Blockchain hóa hồ sơ học tập công dân số
+# User: Naammmdz
+# Date: 2025-06-08 21:15:13
+# =================================================================
+
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Build outputs
+dist/
+build/
+out/
+.next/
+.nuxt/
+.vuepress/dist/
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+*.lcov
+.nyc_output/
+
+# Instrumentation
+lib-cov/
+
+# Grunt intermediate storage
+.grunt
+
+# Bower dependency directory
+bower_components/
+
+# node-waf configuration
+.lock-wscript
+
+# Compiled binary addons
+build/Release
+
+# Dependency directories
+jspm_packages/
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Optional stylelint cache
+.stylelintcache
+
+# Microbundle cache
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# parcel-bundler cache (https://parceljs.org/)
+.cache
+.parcel-cache
+
+# Next.js build output
+.next
+
+# Nuxt.js build / generate output
+.nuxt
+dist
+
+# Storybook build outputs
+.out
+.storybook-out
+storybook-static
+
+# Temporary folders
+tmp/
+temp/
+
+# =================================================================
+# ENVIRONMENT & CONFIG FILES
+# =================================================================
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.staging
+
+# Configuration files with sensitive data
+config/local.json
+config/production.json
+config/staging.json
+
+# =================================================================
+# BLOCKCHAIN & WEB3 SPECIFIC
+# =================================================================
+
+# Private keys and wallets
+*.key
+*.pem
+wallet/
+wallets/
+keystore/
+private-keys/
+
+# Blockchain networks config
+networks.json
+truffle-config.js.backup
+hardhat.config.js.backup
+
+# Smart contract artifacts
+contracts/build/
+artifacts/
+cache/
+typechain/
+typechain-types/
+
+# Gas reporter outputs
+gas-report.txt
+gasReporterOutput.json
+
+# Smart contract coverage
+coverage.json
+coverageEnv/
+
+# Solidity flattened files
+flattened/
+*.flattened.sol
+
+# =================================================================
+# DEVELOPMENT TOOLS
+# =================================================================
+
+# VS Code
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# JetBrains IDEs
+.idea/
+*.swp
+*.swo
+*~
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*.un~
+Session.vim
+.netrwhist
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# =================================================================
+# OPERATING SYSTEM FILES
+# =================================================================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.tmp
+*.temp
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# =================================================================
+# LOGS & DEBUGGING
+# =================================================================
+
+# Application logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Runtime logs
+*.log.*
+*.out
+*.err
+
+# Debug files
+debug/
+.debug/
+*.debug
+
+# =================================================================
+# TESTING & QA
+# =================================================================
+
+# Test coverage
+coverage/
+.coverage/
+*.lcov
+.nyc_output/
+junit.xml
+
+# Test results
+test-results/
+test-output/
+.jest/
+
+# Playwright
+test-results/
+playwright-report/
+playwright/.cache/
+
+# Cypress
+cypress/videos/
+cypress/screenshots/
+cypress/downloads/
+
+# =================================================================
+# BUILD & DEPLOYMENT
+# =================================================================
+
+# Production builds
+build/
+dist/
+out/
+public/build/
+
+# Static files (generated)
+static/generated/
+assets/generated/
+
+# Webpack
+.webpack/
+
+# Rollup
+.rollup.cache/
+
+# Vite
+.vite/
+
+# =================================================================
+# DATABASE & STORAGE
+# =================================================================
+
+# SQLite
+*.sqlite
+*.sqlite3
+*.db
+
+# MongoDB
+*.mongo
+
+# Local database files
+database/
+db/
+data/
+
+# =================================================================
+# BLOCKCHAIN ACADEMIC RECORDS SPECIFIC
+# =================================================================
+
+# Academic records data
+records/export/
+certificates/generated/
+portfolios/cache/
+
+# QR codes generated
+qr-codes/
+temp-qr/
+
+# Verification logs
+verification-logs/
+audit-trail/
+
+# Analytics data
+analytics-export/
+reports/generated/
+
+# User uploads
+uploads/
+user-files/
+temp-uploads/
+
+# Backup files
+backups/
+*.backup
+*.bak
+
+# Export files
+exports/
+*.xlsx
+*.csv
+*.pdf
+
+# =================================================================
+# SECURITY & SENSITIVE DATA
+# =================================================================
+
+# API keys and secrets
+.env.keys
+secrets/
+credentials/
+
+# SSL certificates
+*.crt
+*.key
+*.pem
+*.p12
+*.pfx
+
+# Authentication tokens
+tokens/
+jwt-secrets/
+
+# Encryption keys
+encryption-keys/
+crypto-keys/
+
+# =================================================================
+# PERFORMANCE & MONITORING
+# =================================================================
+
+# Bundle analysis
+bundle-report.html
+webpack-bundle-analyzer-report.html
+
+# Performance logs
+performance/
+.perf/
+
+# Monitoring data
+monitoring/
+metrics/
+
+# =================================================================
+# DOCUMENTATION BUILDS
+# =================================================================
+
+# Generated documentation
+docs/build/
+docs/dist/
+.docusaurus/
+
+# API documentation
+api-docs/generated/
+
+# =================================================================
+# PACKAGE MANAGERS
+# =================================================================
+
+# Yarn
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
+# pnpm
+.pnpm-store/
+
+# Rush
+common/temp/
+
+# =================================================================
+# CUSTOM PROJECT EXCLUDES
+# =================================================================
+
+# Development utilities
+dev-utils/
+scripts/local/
+
+# Local configuration overrides
+*.local.*
+local-*
+
+# Experimental features
+experiments/
+sandbox/
+
+# TODO and notes
+TODO.md
+NOTES.md
+*.todo
+*.notes
+
+# =================================================================
+# END OF GITIGNORE
+# =================================================================
