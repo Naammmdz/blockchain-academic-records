@@ -1,0 +1,9 @@
+export { HeroSection } from './HeroSection';
+export { ValueProposition } from './ValueProposition';
+export { TargetAudiences } from './TargetAudiences';
+export { HowItWorks } from './HowItWorks';
+export { FeaturesShowcase } from './FeaturesShowcase';
+export { TrustSection } from './TrustSection';
+export { Testimonials } from './Testimonials';
+export { CTASection } from './CTASection';
+export { LandingFooter } from './LandingFooter';

@@ -1,0 +1,34 @@
+create table public.certificates (
+  id uuid not null default gen_random_uuid (),
+  student_name text not null,
+  degree_type text not null,
+  major text not null,
+  graduation_date date not null,
+  university text not null default 'Đại học ABC'::text,
+  certificate_hash text not null,
+  blockchain_tx_hash text null,
+  block_number integer null,
+  created_at timestamp with time zone null default now(),
+  verified_at timestamp with time zone null,
+  gpa double precision null,
+  constraint certificates_pkey primary key (id),
+  constraint certificates_certificate_hash_key unique (certificate_hash),
+  constraint certificates_gpa_check check ((gpa > (0)::double precision))
+) TABLESPACE pg_default;
+
+create index IF not exists idx_certificates_hash on public.certificates using btree (certificate_hash) TABLESPACE pg_default;
+
+create index IF not exists idx_certificates_tx_hash on public.certificates using btree (blockchain_tx_hash) TABLESPACE pg_default;
+
+
+
+create table public.verifications (
+  id uuid not null default gen_random_uuid (),
+  certificate_hash text not null,
+  verifier_address text null,
+  success boolean not null,
+  verified_at timestamp with time zone null default now(),
+  constraint verifications_pkey primary key (id)
+) TABLESPACE pg_default;
+
+create index IF not exists idx_verifications_hash on public.verifications using btree (certificate_hash) TABLESPACE pg_default;

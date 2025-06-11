@@ -4,29 +4,22 @@ import { Plus, Download, Upload, RefreshCw, FileText, CheckCircle, Clock, Calend
 import { Button, SkeletonTable, SkeletonCard } from '../components/common';
 import { RecordList, RecordDetail, RecordForm } from '../components/records';
 import { useStore } from '../store';
-import { useNotifications } from '../hooks';
+import { useNotifications, useRecords } from '../hooks';
 import { AcademicRecord } from '../types';
 
 const Records: React.FC = () => {
-  const { records = [], user } = useStore();
+  const { user } = useStore();
   const { addNotification } = useNotifications();
+  const { records, isLoading, loadRecords, refreshRecords } = useRecords();
   const [selectedRecord, setSelectedRecord] = useState<AcademicRecord | null>(null);
   const [showCreateForm, setShowCreateForm] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
   const [isExporting, setIsExporting] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
-  // Simulate data loading
+  // Load data from Supabase
   useEffect(() => {
-    const loadData = async () => {
-      setIsLoading(true);
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      setIsLoading(false);
-    };
-    
-    loadData();
-  }, []);
+    loadRecords();
+  }, [loadRecords]);
 
   const handleRecordSelect = (record: AcademicRecord) => {
     setSelectedRecord(record);
@@ -34,18 +27,10 @@ const Records: React.FC = () => {
 
   const handleCloseDetail = () => {
     setSelectedRecord(null);
-  };
-
-  const handleRefresh = async () => {
+  };  const handleRefresh = async () => {
     setIsRefreshing(true);
     try {
-      // Simulate refresh
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      addNotification({
-        type: 'success',
-        title: 'Dữ liệu đã được cập nhật',
-        message: 'Danh sách hồ sơ đã được làm mới'
-      });
+      await refreshRecords();
     } catch (error) {
       addNotification({
         type: 'error',

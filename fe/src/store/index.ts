@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { User, AcademicRecord, Institution, WalletState, DashboardStats, Activity } from '../types';
 import { mockUser, mockRecords, mockInstitutions, mockActivities, mockDashboardStats } from '../utils/mockData';
+import { CertificateService } from '../lib/certificateService';
 
 // Mock transactions data
 const mockTransactions = [
@@ -44,6 +45,7 @@ interface AppState {
   setRecords: (records: AcademicRecord[]) => void;
   addRecord: (record: AcademicRecord) => void;
   updateRecord: (id: string, updates: Partial<AcademicRecord>) => void;
+  loadRecordsFromSupabase: () => Promise<AcademicRecord[]>;
   
   // Institutions state
   institutions: Institution[];
@@ -72,7 +74,7 @@ interface AppState {
 
 export const useStore = create<AppState>((set) => ({
   // User state
-  user: mockUser,
+  user: null, // Start with no authenticated user to show landing page
   setUser: (user: User | null) => set({ user }),
   
   // Wallet state
@@ -92,6 +94,20 @@ export const useStore = create<AppState>((set) => ({
       record.id === id ? { ...record, ...updates } : record
     )
   })),
+  
+  // Load records from Supabase
+  loadRecordsFromSupabase: async () => {
+    set({ isLoading: true });
+    try {
+      const records = await CertificateService.getAllAcademicRecords();
+      set({ records, isLoading: false });
+      return records;
+    } catch (error) {
+      console.error('Error loading records from Supabase:', error);
+      set({ isLoading: false });
+      return [];
+    }
+  },
   
   // Institutions state
   institutions: mockInstitutions,

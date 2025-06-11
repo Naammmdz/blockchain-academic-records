@@ -1,0 +1,23 @@
+1. QUẢN LÝ BẰNG CẤP (Certificate Management):
+Trường học/Cơ sở giáo dục:
+├── Tạo bằng cấp số (Digital Certificate)
+├── Nhập thông tin sinh viên
+├── Xác thực và ký số (Digital Signature)
+├── Upload lên blockchain
+└── Tạo QR Code xác thực
+
+2. LƯU TRỮ BLOCKCHAIN (Blockchain Storage):
+Smart Contract lưu trữ:
+├── Hash của bằng cấp (Certificate Hash)
+├── Metadata (Tên, trường, ngành, điểm, ngày cấp)
+├── Digital Signature của trường
+├── Timestamp không thể thay đổi
+└── Unique Certificate ID
+
+3. XÁC THỰC (Verification):
+Nhà tuyển dụng/Cơ quan:
+├── Quét QR Code trên bằng
+├── Kiểm tra hash trên blockchain
+├── So sánh với bằng gốc
+├── Xác nhận tính hợp lệ
+└── Nhận kết quả real-time
