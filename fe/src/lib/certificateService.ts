@@ -1,5 +1,6 @@
 import { supabase } from './supabase' // Import supabase client vừa tạo
 import { AcademicRecord } from '../types'; // Import AcademicRecord type
+import { Institution } from '../types';
 
 // Định nghĩa interface cho Certificate object
 export interface Certificate {
@@ -148,5 +149,19 @@ export class CertificateService {
       console.error('Error fetching academic records:', error);
       return [];
     }
+  }
+}
+
+export class InstitutionService {
+  static async getAllInstitutions(): Promise<Institution[]> {
+    const { data, error } = await supabase
+      .from('institutions')
+      .select('*')
+      .order('created_at', { ascending: false });
+    if (error) {
+      console.error('Error fetching institutions:', error.message);
+      return [];
+    }
+    return (data as Institution[]) || [];
   }
 }

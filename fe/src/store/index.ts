@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { User, AcademicRecord, Institution, WalletState, DashboardStats, Activity } from '../types';
 import { mockUser, mockRecords, mockInstitutions, mockActivities, mockDashboardStats } from '../utils/mockData';
 import { CertificateService } from '../lib/certificateService';
+import { InstitutionService } from '../lib/institutionService';
 
 // Mock transactions data
 const mockTransactions = [
@@ -50,6 +51,7 @@ interface AppState {
   // Institutions state
   institutions: Institution[];
   setInstitutions: (institutions: Institution[]) => void;
+  loadInstitutionsFromSupabase: () => Promise<Institution[]>;
   
   // Transactions state
   transactions: any[];
@@ -112,6 +114,18 @@ export const useStore = create<AppState>((set) => ({
   // Institutions state
   institutions: mockInstitutions,
   setInstitutions: (institutions: Institution[]) => set({ institutions }),
+  loadInstitutionsFromSupabase: async () => {
+    set({ isLoading: true });
+    try {
+      const institutions = await InstitutionService.getAllInstitutions();
+      set({ institutions, isLoading: false });
+      return institutions;
+    } catch (error) {
+      console.error('Error loading institutions from Supabase:', error);
+      set({ isLoading: false });
+      return [];
+    }
+  },
   
   // Transactions state
   transactions: mockTransactions,

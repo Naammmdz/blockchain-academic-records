@@ -5,9 +5,10 @@ import { Button, Card, Input, Modal, Skeleton } from '../components/common';
 import { useNotifications } from '../hooks';
 import { useStore } from '../store';
 import { Institution } from '../types';
+import { InstitutionService } from '../lib/institutionService';
 
 const Institutions: React.FC = () => {
-  const { institutions } = useStore();
+  const { institutions, loadInstitutionsFromSupabase } = useStore();
   const { addNotification } = useNotifications();
   const [selectedInstitution, setSelectedInstitution] = useState<Institution | null>(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -26,14 +27,15 @@ const Institutions: React.FC = () => {
     studentCount: ''
   });
 
-  // Simulate loading
+  // Load institutions from Supabase
   useEffect(() => {
-    const loadData = async () => {
-      await new Promise(resolve => setTimeout(resolve, 1000));
+    const fetchInstitutions = async () => {
+      setIsLoading(true);
+      await loadInstitutionsFromSupabase();
       setIsLoading(false);
     };
-    loadData();
-  }, []);
+    fetchInstitutions();
+  }, [loadInstitutionsFromSupabase]);
 
   const filteredInstitutions = institutions.filter(institution =>
     institution.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -56,14 +58,28 @@ const Institutions: React.FC = () => {
 
     setIsCreating(true);
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
+      // Gửi dữ liệu lên Supabase
+      await InstitutionService.createInstitution({
+        name: newInstitution.name,
+        type: newInstitution.type as 'university' | 'college' | 'high-school',
+        address: newInstitution.address,
+        // Các trường bổ sung nếu có:
+        established_year: newInstitution.establishedYear ? Number(newInstitution.establishedYear) : undefined,
+        phone: newInstitution.phone,
+        email: newInstitution.email,
+        student_count: newInstitution.studentCount ? Number(newInstitution.studentCount) : undefined,
+        verified: false // hoặc true nếu muốn mặc định đã xác minh
+      });
+
+      // Sau khi thêm thành công, reload lại danh sách institutions
+      await loadInstitutionsFromSupabase();
+
       addNotification({
         type: 'success',
         title: 'Thêm thành công',
         message: `Đã thêm cơ sở giáo dục ${newInstitution.name} thành công`
       });
-      
+
       setShowCreateModal(false);
       setNewInstitution({
         name: '',
@@ -78,7 +94,7 @@ const Institutions: React.FC = () => {
       addNotification({
         type: 'error',
         title: 'Lỗi thêm cơ sở',
-        message: 'Không thể thêm cơ sở giáo dục. Vui lòng thử lại.'
+        message: error instanceof Error ? error.message : 'Không thể thêm cơ sở giáo dục. Vui lòng thử lại.'
       });
     } finally {
       setIsCreating(false);
@@ -411,14 +427,19 @@ const Institutions: React.FC = () => {
             required
             disabled={isCreating}
           />
-          <Input
-            label="Loại hình"
-            placeholder="VD: Đại học, Cao đẳng, Viện"
+          {/* Loại hình */}
+          <select
             value={newInstitution.type}
-            onChange={(e) => setNewInstitution(prev => ({ ...prev, type: e.target.value }))}
+            onChange={e => setNewInstitution(prev => ({ ...prev, type: e.target.value }))}
             required
             disabled={isCreating}
-          />
+            className="w-full px-3 py-2 border border-gray-300 rounded-md"
+          >
+            <option value="">Chọn loại hình</option>
+            <option value="university">Đại học</option>
+            <option value="college">Cao đẳng</option>
+            <option value="high-school">Trung học phổ thông</option>
+          </select>
           <Input
             label="Địa chỉ"
             placeholder="Nhập địa chỉ"

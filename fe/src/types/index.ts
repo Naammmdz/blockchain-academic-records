@@ -13,6 +13,10 @@ export interface Institution {
   type: 'university' | 'college' | 'high-school';
   address: string;
   verified: boolean;
+  established_year?: number;
+  phone?: string;
+  email?: string;
+  student_count?: number;
 }
 
 export interface AcademicRecord {

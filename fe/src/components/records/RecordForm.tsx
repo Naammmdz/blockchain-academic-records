@@ -54,7 +54,8 @@ const RecordForm: React.FC<RecordFormProps> = ({ isOpen, onClose, record }) => {
       degree_type: formData.degree,
       major: formData.major,
       graduation_date: formData.graduationDate,
-      university: institutions.find(inst => inst.id === formData.institutionId)?.name || 'Unknown Institution'
+      university: institutions.find(inst => inst.id === formData.institutionId)?.name || 'Unknown Institution',
+      gpa: parseFloat(formData.gpa)
     };
 
     const createdCertificate = await CertificateService.createCertificate(certificateData);
