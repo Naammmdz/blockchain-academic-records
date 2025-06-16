@@ -1,0 +1,68 @@
+import { expect } from "chai";
+import { ethers } from "hardhat";
+import { AcademicCertificate } from "../typechain-types";
+import { SignerWithAddress } from "@nomicfoundation/hardhat-ethers/signers";
+
+describe("AcademicCertificate", function () {
+    let contract: AcademicCertificate;
+    let owner: SignerWithAddress;
+    let student: SignerWithAddress;
+    let issuer: SignerWithAddress;
+
+    beforeEach(async function () {
+        [owner, student, issuer] = await ethers.getSigners();
+        
+        const AcademicCertificate = await ethers.getContractFactory("AcademicCertificate");
+        contract = await AcademicCertificate.deploy();
+        await contract.waitForDeployment();
+        
+        // Setup university
+        await contract.approveUniversity("Test University");
+    });
+
+    it("Should deploy successfully", async function () {
+        expect(await contract.name()).to.equal("AcademicCertificate");
+        expect(await contract.symbol()).to.equal("ACERT");
+    });
+
+    it("Should approve university", async function () {
+        expect(await contract.universityApproved("Test University")).to.be.true;
+    });
+
+    it("Should issue certificate", async function () {
+        const tx = await contract.issueCertificate(
+            student.address,
+            "Nguyen Van A",
+            "SV001",
+            "Computer Science",
+            "Software Engineering",
+            "Test University",
+            Math.floor(Date.now() / 1000),
+            "QmTestHash123",
+            "3.5"
+        );
+        
+        await tx.wait();
+        
+        const certificate = await contract.getCertificate(1);
+        expect(certificate.studentName).to.equal("Nguyen Van A");
+        expect(certificate.studentId).to.equal("SV001");
+        expect(certificate.isValid).to.be.true;
+    });
+
+    it("Should verify certificate", async function () {
+        await contract.issueCertificate(
+            student.address,
+            "Nguyen Van B",
+            "SV002", 
+            "Computer Science",
+            "AI",
+            "Test University",
+            Math.floor(Date.now() / 1000),
+            "QmTestHash456",
+            "3.8"
+        );
+        
+        expect(await contract.verifyCertificate(1)).to.be.true;
+    });
+});

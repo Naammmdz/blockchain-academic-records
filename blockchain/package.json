@@ -1,0 +1,44 @@
+{
+  "name": "blockchain-academic-certificates",
+  "version": "1.0.0",
+  "description": "Smart contracts for academic certificate management system",
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "node": "hardhat node",
+    "deploy:local": "hardhat run scripts/deploy.ts --network localhost",
+    "clean": "hardhat clean"
+  },
+  "keywords": [
+    "blockchain",
+    "academic",
+    "certificates",
+    "nft",
+    "hardhat"
+  ],
+  "author": "Naammmdz",
+  "license": "MIT",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-chai-matchers": "^2.0.9",
+    "@nomicfoundation/hardhat-ethers": "^3.0.9",
+    "@nomicfoundation/hardhat-network-helpers": "^1.0.12",
+    "@nomicfoundation/hardhat-toolbox": "^3.0.0",
+    "@nomicfoundation/hardhat-verify": "^1.1.1",
+    "@typechain/ethers-v6": "^0.4.3",
+    "@typechain/hardhat": "^8.0.0",
+    "@types/chai": "^4.3.20",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^18.0.0",
+    "chai": "^4.5.0",
+    "ethers": "^6.14.4",
+    "hardhat": "^2.17.0",
+    "hardhat-gas-reporter": "^1.0.10",
+    "solidity-coverage": "^0.8.16",
+    "ts-node": "^10.9.0",
+    "typechain": "^8.3.2",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "4.9.3"
+  }
+}
