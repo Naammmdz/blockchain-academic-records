@@ -217,14 +217,21 @@ export class Web3Service {
     }
   }
 
-  async checkIssuerRole(address: string): Promise<boolean> {
+  async checkIssuerRole(address?: string): Promise<boolean> {
     if (!this.contract) return false;
     try {
       const ISSUER_ROLE = await this.contract.ISSUER_ROLE();
-      return await this.contract.hasRole(ISSUER_ROLE, address);
+      const checkAddress = address || await this.signer?.getAddress();
+      if (!checkAddress) return false;
+      return await this.contract.hasRole(ISSUER_ROLE, checkAddress);
     } catch (error) {
       return false;
     }
+  }
+
+  // Overload: checkIssuerRole() - check current user's role
+  async checkCurrentUserIssuerRole(): Promise<boolean> {
+    return this.checkIssuerRole();
   }
 
   getContract() {
