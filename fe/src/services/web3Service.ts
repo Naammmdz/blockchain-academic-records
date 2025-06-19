@@ -251,6 +251,48 @@ export class Web3Service {
       return '0';
     }
   }
+
+  async approveUniversity(universityName: string): Promise<{ 
+    success: boolean; 
+    txHash?: string; 
+    message?: string;
+    error?: string;
+  }> {
+    try {
+      if (!this.contract) {
+        await this.connectWallet();
+      }
+
+      console.log('Checking if university already approved:', universityName);
+
+      // Check if already approved 
+      const isApproved = await this.contract?.functions.universityApproved(universityName);
+      
+      if (isApproved?.[0] === true) {
+        return {
+          success: true,
+          message: 'Trường đã được thêm vào blockchain'
+        };
+      }
+
+      // Add to blockchain
+      console.log('Adding university to blockchain:', universityName);
+      const tx = await this.contract?.functions.approveUniversity(universityName);
+      const receipt = await tx.wait();
+
+      return {
+        success: true,
+        txHash: receipt.transactionHash,
+        message: 'Thêm trường thành công'
+      };
+    } catch (error: any) {
+      console.error('Error approving university:', error);
+      return {
+        success: false,
+        error: error.message || 'Không thể thêm trường vào blockchain'
+      };
+    }
+  }
 }
 
 export const web3Service = new Web3Service();

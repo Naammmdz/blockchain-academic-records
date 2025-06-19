@@ -12,7 +12,9 @@ export const CONTRACT_CONFIG = {
     "function getValidCertificatesCount() view returns (uint256)",
     "function revokeCertificate(uint256,string) returns (bool)",
     "function hasRole(bytes32,address) view returns (bool)",
-    "function ISSUER_ROLE() view returns (bytes32)"
+    "function ISSUER_ROLE() view returns (bytes32)",
+    "function approveUniversity(string) public",
+    "function universityApproved(string) public view returns (bool)"
   ],
   network: {
     chainId: 31337,

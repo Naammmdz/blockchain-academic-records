@@ -6,6 +6,7 @@ import { useNotifications } from '../hooks';
 import { useStore } from '../store';
 import { Institution } from '../types';
 import { InstitutionService } from '../lib/institutionService';
+import { web3Service } from '../services/web3Service';
 
 const Institutions: React.FC = () => {
   const { institutions, loadInstitutionsFromSupabase } = useStore();
@@ -17,6 +18,7 @@ const Institutions: React.FC = () => {
   const [isCreating, setIsCreating] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [verifyingInstitutions, setVerifyingInstitutions] = useState<Set<string>>(new Set());
   const [newInstitution, setNewInstitution] = useState({
     name: '',
     type: '',
@@ -147,98 +149,193 @@ const Institutions: React.FC = () => {
     }
   };
 
+  const handleVerifyInstitution = async (institution: Institution) => {
+    if (verifyingInstitutions.has(institution.id)) return;
+    
+    try {
+      console.log('=== VERIFICATION START ===');
+      
+      // Add to verifying set
+      setVerifyingInstitutions(prev => new Set(prev).add(institution.id));
+      
+      // Step 1: Connect wallet & add to blockchain
+      try {
+        await web3Service.connectWallet();
+      } catch (error) {
+        throw new Error('Vui lòng kết nối ví MetaMask để tiếp tục');
+      }
+
+      addNotification({
+        type: 'info',
+        title: 'Đang xử lý',
+        message: 'Đang thêm trường vào blockchain...'
+      });
+
+      const response = await web3Service.approveUniversity(institution.name);
+      
+      if (!response.success) {
+        throw new Error(response.error || 'Không thể thêm trường vào blockchain');
+      }
+
+      // Step 2: Only update Supabase if blockchain operation succeeded
+      addNotification({
+        type: 'info',
+        title: 'Đang cập nhật',
+        message: 'Blockchain thành công, đang cập nhật database...'
+      });
+
+      await InstitutionService.verifyInstitution(institution.id);
+      
+      // Step 3: Reload data
+      await loadInstitutionsFromSupabase();
+
+      const txHashDisplay = response.txHash ? `TX: ${response.txHash.slice(0, 10)}...` : '';
+      
+      addNotification({
+        type: 'success',
+        title: 'Xác minh thành công',
+        message: `${institution.name} đã được thêm vào blockchain. ${txHashDisplay}`
+      });
+      
+    } catch (error) {
+      console.error('=== VERIFICATION ERROR ===', error);
+      addNotification({
+        type: 'error',
+        title: 'Lỗi xác minh',
+        message: error instanceof Error ? error.message : 'Không thể xác minh cơ sở. Vui lòng thử lại.'
+      });
+    } finally {
+      setVerifyingInstitutions(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(institution.id);
+        return newSet;
+      });
+    }
+  };
+
   const InstitutionCard: React.FC<{ institution: Institution; index: number }> = ({ 
     institution, 
     index 
-  }) => (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.1 }}
-    >
-      <Card className="p-6 hover:shadow-lg transition-shadow cursor-pointer">
-        <div className="flex items-start justify-between mb-4">
-          <div className="flex items-center gap-3">
-            <div className="p-3 bg-blue-100 rounded-lg">
-              <Building2 className="w-6 h-6 text-blue-600" />
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold text-gray-900">
-                {institution.name}
-              </h3>
-              <p className="text-sm text-gray-600">{institution.type}</p>
-            </div>
-          </div>
-          <div className="flex gap-2">
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => handleInstitutionSelect(institution)}
-              disabled={isUpdating}
-            >
-              <Edit className="w-4 h-4" />
-            </Button>
-            <Button 
-              size="sm" 
-              variant="outline" 
-              className="text-red-600 hover:text-red-700"
-              onClick={() => handleDeleteInstitution(institution)}
-              disabled={isDeleting}
-            >
-              <Trash2 className="w-4 h-4" />
-            </Button>
-          </div>
-        </div>
+  }) => {
+    const isVerifying = verifyingInstitutions.has(institution.id);
 
-        <div className="space-y-3">
-          <div className="flex items-center gap-2 text-sm text-gray-600">
-            <MapPin className="w-4 h-4" />
-            <span>{institution.address}</span>
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: index * 0.1 }}
+      >
+        <Card className="p-6 hover:shadow-lg transition-shadow cursor-pointer">
+          <div className="flex items-start justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <div className="p-3 bg-blue-100 rounded-lg">
+                <Building2 className="w-6 h-6 text-blue-600" />
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900">
+                  {institution.name}
+                </h3>
+                <p className="text-sm text-gray-600">{institution.type}</p>
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => handleInstitutionSelect(institution)}
+                disabled={isUpdating}
+              >
+                <Edit className="w-4 h-4" />
+              </Button>
+              <Button 
+                size="sm" 
+                variant="outline" 
+                className="text-red-600 hover:text-red-700"
+                onClick={() => handleDeleteInstitution(institution)}
+                disabled={isDeleting}
+              >
+                <Trash2 className="w-4 h-4" />
+              </Button>
+            </div>
           </div>
-          
-          <div className="flex items-center gap-2 text-sm text-gray-600">
-            <Phone className="w-4 h-4" />
-            <span>+84 123 456 789</span>
-          </div>
-          
-          <div className="flex items-center gap-2 text-sm text-gray-600">
-            <Mail className="w-4 h-4" />
-            <span>contact@{institution.name.toLowerCase().replace(/\s+/g, '')}.edu.vn</span>
-          </div>
-          
-          <div className="flex items-center gap-2 text-sm text-gray-600">
-            <Users className="w-4 h-4" />
-            <span>5,000 sinh viên</span>
-          </div>
-        </div>
 
-        <div className="mt-4 pt-4 border-t border-gray-200">
-          <div className="flex items-center justify-between">
-            <span className={`px-2 py-1 rounded-full text-xs font-medium flex items-center gap-1 ${
-              institution.verified 
-                ? 'bg-green-100 text-green-800' 
-                : 'bg-yellow-100 text-yellow-800'
-            }`}>
-              {institution.verified ? (
-                <>
-                  <Check className="w-3 h-3" />
-                  Đã xác minh
-                </>
-              ) : (
-                <>
-                  <Clock className="w-3 h-3" />
-                  Chờ xác minh
-                </>
-              )}
-            </span>
-            <span className="text-xs text-gray-500">
-              Thành lập 1995
-            </span>
+          <div className="space-y-3">
+            <div className="flex items-center gap-2 text-sm text-gray-600">
+              <MapPin className="w-4 h-4" />
+              <span>{institution.address || 'Chưa cập nhật'}</span>
+            </div>
+            <div className="flex items-center gap-2 text-sm text-gray-600">
+              <Phone className="w-4 h-4" />
+              <span>{institution.phone || 'Chưa cập nhật'}</span>
+            </div>
+            <div className="flex items-center gap-2 text-sm text-gray-600">
+              <Mail className="w-4 h-4" />
+              <span>{institution.email || 'Chưa cập nhật'}</span>
+            </div>
+            <div className="flex items-center gap-2 text-sm text-gray-600">
+              <Users className="w-4 h-4" />
+              <span>
+                {typeof institution.student_count === 'number'
+                  ? institution.student_count.toLocaleString() + ' sinh viên'
+                  : 'Chưa cập nhật'}
+              </span>
+            </div>
           </div>
-        </div>
-      </Card>
-    </motion.div>
-  );
+
+          <div className="mt-4 pt-4 border-t border-gray-200">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className={`px-2 py-1 rounded-full text-xs font-medium flex items-center gap-1 ${
+                  institution.verified 
+                    ? 'bg-green-100 text-green-800' 
+                    : 'bg-yellow-100 text-yellow-800'
+                }`}>
+                  {institution.verified ? (
+                    <>
+                      <Check className="w-3 h-3" />
+                      Đã xác minh
+                    </>
+                  ) : (
+                    <>
+                      <Clock className="w-3 h-3" />
+                      Chờ xác minh
+                    </>
+                  )}
+                </span>
+                {!institution.verified && (
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    className="flex items-center gap-1 text-xs"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleVerifyInstitution(institution);
+                    }}
+                    disabled={isVerifying}
+                  >
+                    {isVerifying ? (
+                      <>
+                        <div className="w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                        Đang xác minh...
+                      </>
+                    ) : (
+                      <>
+                        <Check className="w-3 h-3" />
+                        Xác minh ngay
+                      </>
+                    )}
+                  </Button>
+                )}
+              </div>
+              <span className="text-xs text-gray-500">
+                Thành lập {institution.established_year || 'N/A'}
+              </span>
+            </div>
+          </div>
+        </Card>
+      </motion.div>
+    );
+  };
 
   const SkeletonCard = () => (
     <Card className="p-6">

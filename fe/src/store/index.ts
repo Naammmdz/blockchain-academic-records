@@ -51,7 +51,7 @@ interface AppState {
   // Institutions state
   institutions: Institution[];
   setInstitutions: (institutions: Institution[]) => void;
-  loadInstitutionsFromSupabase: () => Promise<Institution[]>;
+  loadInstitutionsFromSupabase: () => Promise<void>;
   
   // Transactions state
   transactions: any[];
@@ -115,15 +115,14 @@ export const useStore = create<AppState>((set) => ({
   institutions: mockInstitutions,
   setInstitutions: (institutions: Institution[]) => set({ institutions }),
   loadInstitutionsFromSupabase: async () => {
-    set({ isLoading: true });
     try {
+      console.log('Loading institutions from Supabase...');
       const institutions = await InstitutionService.getAllInstitutions();
-      set({ institutions, isLoading: false });
-      return institutions;
+      console.log('Loaded institutions:', institutions);
+      set({ institutions });
     } catch (error) {
-      console.error('Error loading institutions from Supabase:', error);
-      set({ isLoading: false });
-      return [];
+      console.error('Error loading institutions:', error);
+      set({ institutions: [] });
     }
   },
   
